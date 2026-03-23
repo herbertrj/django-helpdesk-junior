@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Chamado #{{ ticket.id }} | Help Desk{% endblock %}
+
+{% block content %}
+<h2>Chamado #{{ ticket.id }} - {{ ticket.title }}</h2>
+<p><strong>Status:</strong> {{ ticket.get_status_display }}</p>
+<p><strong>Prioridade:</strong> {{ ticket.get_priority_display }}</p>
+<p><strong>Criado por:</strong> {{ ticket.created_by.username }}</p>
+<p><strong>Responsavel:</strong> {{ ticket.assigned_to|default:"Nao definido" }}</p>
+<p><strong>Descricao:</strong> {{ ticket.description }}</p>
+
+<h3>Alterar status</h3>
+<form method="post" action="{% url 'ticket-update-status' ticket.pk %}">
+    {% csrf_token %}
+    <select name="status">
+        {% for value, label in ticket.Status.choices %}
+            <option value="{{ value }}" {% if ticket.status == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Atualizar</button>
+</form>
+{% endblock %}

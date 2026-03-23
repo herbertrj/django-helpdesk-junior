@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Help Desk{% endblock %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<ul>
+    <li>Total de chamados: {{ total_tickets }}</li>
+    <li>Abertos: {{ open_tickets }}</li>
+    <li>Em andamento: {{ in_progress_tickets }}</li>
+    <li>Resolvidos: {{ resolved_tickets }}</li>
+</ul>
+{% endblock %}
