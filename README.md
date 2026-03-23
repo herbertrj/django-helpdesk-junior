@@ -1,16 +1,11 @@
 # Help Desk - Sistema de Gestao de Chamados
 
-Projeto de portifolio para vaga junior/estagio com foco em Django e Python.
+Projeto de portfolio feito para praticar Django em um cenario mais proximo do dia a dia: abertura e acompanhamento de chamados.
 
-## Objetivo
+## Sobre o projeto
 
-Construir um sistema realista de abertura e acompanhamento de chamados para demonstrar:
-
-- modelagem de dados com Django ORM;
-- autenticacao e controle de acesso;
-- organizacao de codigo por apps;
-- regras de negocio basicas de atendimento;
-- dashboard simples para analise.
+A ideia aqui e simples: ter um sistema funcional, organizado e facil de evoluir.
+Neste primeiro momento, foquei em acertar o basico (autenticacao, CRUD de chamados e dashboard inicial) antes de partir para funcionalidades mais avancadas.
 
 ## Stack
 
@@ -72,46 +67,17 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## Roadmap (nivel junior forte)
+## Proximos passos
 
 - [x] Base do projeto Django com autenticacao
 - [x] CRUD inicial de chamados
-- [ ] Comentarios/interacoes por chamado
+- [ ] Comentarios por chamado
 - [ ] Regras de transicao de status com permissao por perfil
 - [ ] Dashboard com metricas de tempo medio de resolucao
 - [ ] Testes automatizados para fluxo principal
 - [ ] Deploy (Render/Railway)
 
-## Plano de commits recomendado
-
-### Hoje (Dia 1)
-
-1. `chore: iniciar projeto django e apps principais`
-2. `feat: adicionar autenticacao com login, logout e cadastro`
-3. `feat: criar fluxo inicial de chamados com dashboard basico`
-4. `docs: adicionar README com setup e roadmap`
-
-### Dia 2
-
-5. `feat: adicionar comentarios em chamados`
-6. `refactor: separar regras de negocio em camada de servicos`
-
-### Dia 3
-
-7. `feat: validar transicoes de status por perfil de usuario`
-8. `test: cobrir criacao e atualizacao de chamados`
-
-### Dia 4
-
-9. `feat: melhorar dashboard com indicadores de resolucao`
-10. `style: melhorar layout das telas principais`
-
-### Dia 5
-
-11. `docs: adicionar capturas de tela e decisoes tecnicas`
-12. `chore: preparar projeto para deploy`
-
-## Decisoes tecnicas iniciais
+## Decisoes tecnicas
 
 - Usar apps separados (`tickets` e `users`) para facilitar evolucao.
 - Comecar com SQLite para foco em logica e entrega rapida.
