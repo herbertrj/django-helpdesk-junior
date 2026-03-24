@@ -47,3 +47,25 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"#{self.id} - {self.title}"
+
+
+class TicketComment(models.Model):
+    ticket = models.ForeignKey(
+        Ticket,
+        related_name="comments",
+        on_delete=models.CASCADE,
+        verbose_name="Chamado",
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Autor",
+    )
+    message = models.TextField("Mensagem")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Criado em")
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Comentario #{self.id} no chamado #{self.ticket_id}"

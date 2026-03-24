@@ -22,4 +22,23 @@
     </select>
     <button type="submit">Atualizar</button>
 </form>
+
+<h3>Comentarios</h3>
+<ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.author.username }}</strong> - {{ comment.created_at|date:"d/m/Y H:i" }}<br>
+            {{ comment.message }}
+        </li>
+    {% empty %}
+        <li>Ainda nao existem comentarios para este chamado.</li>
+    {% endfor %}
+</ul>
+
+<h3>Adicionar comentario</h3>
+<form method="post" action="{% url 'ticket-detail' ticket.pk %}">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Salvar comentario</button>
+</form>
 {% endblock %}
