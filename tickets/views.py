@@ -2,8 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import TicketForm
+from .forms import TicketCommentForm, TicketForm
 from .models import Ticket
+from .services import update_ticket_status
 
 
 @login_required
@@ -38,19 +39,33 @@ def ticket_create(request):
 
 @login_required
 def ticket_detail(request, pk):
-    ticket = get_object_or_404(Ticket, pk=pk)
-    return render(request, "tickets/ticket_detail.html", {"ticket": ticket})
+    ticket = get_object_or_404(Ticket.objects.select_related("created_by", "assigned_to"), pk=pk)
+    comments = ticket.comments.select_related("author").all()
+
+    if request.method == "POST":
+        form = TicketCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.ticket = ticket
+            comment.author = request.user
+            comment.save()
+            return redirect("ticket-detail", pk=ticket.pk)
+    else:
+        form = TicketCommentForm()
+
+    context = {
+        "ticket": ticket,
+        "comments": comments,
+        "comment_form": form,
+    }
+    return render(request, "tickets/ticket_detail.html", context)
 
 
 @login_required
 def ticket_update_status(request, pk):
     ticket = get_object_or_404(Ticket, pk=pk)
     new_status = request.POST.get("status")
-    valid_status = {choice[0] for choice in Ticket.Status.choices}
-
-    if new_status in valid_status:
-        ticket.status = new_status
-        ticket.save(update_fields=["status", "updated_at"])
+    update_ticket_status(ticket, new_status)
 
     return redirect("ticket-detail", pk=ticket.pk)
 
