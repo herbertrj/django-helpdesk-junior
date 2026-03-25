@@ -57,6 +57,7 @@ def ticket_detail(request, pk):
         "ticket": ticket,
         "comments": comments,
         "comment_form": form,
+        "can_update_status": request.user.is_staff or ticket.assigned_to_id == request.user.id,
     }
     return render(request, "tickets/ticket_detail.html", context)
 
@@ -65,7 +66,7 @@ def ticket_detail(request, pk):
 def ticket_update_status(request, pk):
     ticket = get_object_or_404(Ticket, pk=pk)
     new_status = request.POST.get("status")
-    update_ticket_status(ticket, new_status)
+    update_ticket_status(request.user, ticket, new_status)
 
     return redirect("ticket-detail", pk=ticket.pk)
 
