@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import TicketCommentForm, TicketForm
@@ -80,10 +80,35 @@ def dashboard(request):
     )
     status_map = {item["status"]: item["total"] for item in status_totals}
 
+    total_tickets = Ticket.objects.count()
+    resolved_tickets = status_map.get(Ticket.Status.RESOLVED, 0)
+
+    resolution_avg = (
+        Ticket.objects.filter(status=Ticket.Status.RESOLVED)
+        .annotate(
+            resolution_time=ExpressionWrapper(
+                F("updated_at") - F("created_at"),
+                output_field=DurationField(),
+            )
+        )
+        .aggregate(avg_time=Avg("resolution_time"))
+        .get("avg_time")
+    )
+
+    avg_resolution_hours = 0.0
+    if resolution_avg:
+        avg_resolution_hours = round(resolution_avg.total_seconds() / 3600, 2)
+
+    resolved_rate = 0.0
+    if total_tickets > 0:
+        resolved_rate = round((resolved_tickets / total_tickets) * 100, 1)
+
     context = {
-        "total_tickets": Ticket.objects.count(),
+        "total_tickets": total_tickets,
         "open_tickets": status_map.get(Ticket.Status.OPEN, 0),
         "in_progress_tickets": status_map.get(Ticket.Status.IN_PROGRESS, 0),
-        "resolved_tickets": status_map.get(Ticket.Status.RESOLVED, 0),
+        "resolved_tickets": resolved_tickets,
+        "resolved_rate": resolved_rate,
+        "avg_resolution_hours": avg_resolution_hours,
     }
     return render(request, "tickets/dashboard.html", context)

@@ -4,10 +4,33 @@
 
 {% block content %}
 <h2>Dashboard</h2>
-<ul>
-    <li>Total de chamados: {{ total_tickets }}</li>
-    <li>Abertos: {{ open_tickets }}</li>
-    <li>Em andamento: {{ in_progress_tickets }}</li>
-    <li>Resolvidos: {{ resolved_tickets }}</li>
-</ul>
+<div class="cards-grid">
+    <div class="card">
+        <h3>Total de chamados</h3>
+        <p class="metric">{{ total_tickets }}</p>
+    </div>
+    <div class="card">
+        <h3>Abertos</h3>
+        <p class="metric">{{ open_tickets }}</p>
+    </div>
+    <div class="card">
+        <h3>Em andamento</h3>
+        <p class="metric">{{ in_progress_tickets }}</p>
+    </div>
+    <div class="card">
+        <h3>Resolvidos</h3>
+        <p class="metric">{{ resolved_tickets }}</p>
+    </div>
+</div>
+
+<div class="cards-grid">
+    <div class="card">
+        <h3>Taxa de resolucao</h3>
+        <p class="metric">{{ resolved_rate }}%</p>
+    </div>
+    <div class="card">
+        <h3>Tempo medio de resolucao</h3>
+        <p class="metric">{{ avg_resolution_hours }}h</p>
+    </div>
+</div>
 {% endblock %}
