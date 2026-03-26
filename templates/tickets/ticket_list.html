@@ -5,7 +5,7 @@
 {% block content %}
 <h2>Lista de chamados</h2>
 
-<form method="get">
+<form method="get" class="inline-form">
     <label for="status">Filtrar por status:</label>
     <select name="status" id="status">
         <option value="">Todos</option>
@@ -18,9 +18,9 @@
     <button type="submit">Filtrar</button>
 </form>
 
-<ul>
+<ul class="ticket-list">
     {% for ticket in tickets %}
-        <li>
+        <li class="ticket-item">
             <a href="{% url 'ticket-detail' ticket.pk %}">
                 #{{ ticket.id }} - {{ ticket.title }}
             </a>

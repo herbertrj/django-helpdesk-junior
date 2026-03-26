@@ -4,15 +4,17 @@
 
 {% block content %}
 <h2>Chamado #{{ ticket.id }} - {{ ticket.title }}</h2>
-<p><strong>Status:</strong> {{ ticket.get_status_display }}</p>
-<p><strong>Prioridade:</strong> {{ ticket.get_priority_display }}</p>
-<p><strong>Criado por:</strong> {{ ticket.created_by.username }}</p>
-<p><strong>Responsavel:</strong> {{ ticket.assigned_to|default:"Nao definido" }}</p>
-<p><strong>Descricao:</strong> {{ ticket.description }}</p>
+<div class="card">
+    <p><strong>Status:</strong> {{ ticket.get_status_display }}</p>
+    <p><strong>Prioridade:</strong> {{ ticket.get_priority_display }}</p>
+    <p><strong>Criado por:</strong> {{ ticket.created_by.username }}</p>
+    <p><strong>Responsavel:</strong> {{ ticket.assigned_to|default:"Nao definido" }}</p>
+    <p><strong>Descricao:</strong> {{ ticket.description }}</p>
+</div>
 
 {% if can_update_status %}
     <h3>Alterar status</h3>
-    <form method="post" action="{% url 'ticket-update-status' ticket.pk %}">
+    <form method="post" action="{% url 'ticket-update-status' ticket.pk %}" class="inline-form">
         {% csrf_token %}
         <select name="status">
             {% for value, label in ticket.Status.choices %}
@@ -26,9 +28,9 @@
 {% endif %}
 
 <h3>Comentarios</h3>
-<ul>
+<ul class="ticket-list">
     {% for comment in comments %}
-        <li>
+        <li class="ticket-item">
             <strong>{{ comment.author.username }}</strong> - {{ comment.created_at|date:"d/m/Y H:i" }}<br>
             {{ comment.message }}
         </li>
@@ -38,7 +40,7 @@
 </ul>
 
 <h3>Adicionar comentario</h3>
-<form method="post" action="{% url 'ticket-detail' ticket.pk %}">
+<form method="post" action="{% url 'ticket-detail' ticket.pk %}" class="form-card">
     {% csrf_token %}
     {{ comment_form.as_p }}
     <button type="submit">Salvar comentario</button>

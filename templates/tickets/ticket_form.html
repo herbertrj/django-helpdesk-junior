@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Novo chamado</h2>
-<form method="post">
+<form method="post" class="form-card">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Salvar chamado</button>

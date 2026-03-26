@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <header>
-        <h1>Help Desk</h1>
-        <nav>
+    <header class="topbar">
+        <h1 class="brand">Help Desk</h1>
+        <nav class="menu">
             {% if user.is_authenticated %}
                 <a href="{% url 'ticket-list' %}">Chamados</a>
                 <a href="{% url 'dashboard' %}">Dashboard</a>
                 <a href="{% url 'ticket-create' %}">Novo chamado</a>
-                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                <form method="post" action="{% url 'logout' %}" class="inline-form">
                     {% csrf_token %}
                     <button type="submit">Sair</button>
                 </form>
@@ -25,7 +25,7 @@
         </nav>
     </header>
 
-    <main>
+    <main class="container">
         {% block content %}{% endblock %}
     </main>
 </body>
