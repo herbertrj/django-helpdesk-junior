@@ -20,9 +20,11 @@ Neste primeiro momento, foquei em acertar o basico (autenticacao, CRUD de chamad
 - Criacao de chamados
 - Lista de chamados com filtro por status
 - Detalhe de chamado
-- Atualizacao de status do chamado
-- Dashboard com contagem por status
+- Comentarios por chamado
+- Atualizacao de status com permissao por perfil
+- Dashboard com taxa e tempo medio de resolucao
 - Tela administrativa com `Ticket` registrado no admin
+- Testes automatizados para fluxo principal
 
 ## Estrutura do projeto
 
@@ -67,15 +69,37 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+## Rodar testes
+
+```bash
+python manage.py test
+```
+
+## Deploy (base)
+
+Este projeto ja possui configuracao inicial para deploy:
+
+- `Procfile` para executar com Gunicorn
+- `whitenoise` para servir arquivos estaticos
+- variaveis de ambiente em `.env.example`
+
+Em producao, configure pelo menos:
+
+- `DJANGO_SECRET_KEY`
+- `DJANGO_DEBUG=False`
+- `DJANGO_ALLOWED_HOSTS=seu-dominio.com`
+
 ## Proximos passos
 
 - [x] Base do projeto Django com autenticacao
 - [x] CRUD inicial de chamados
-- [ ] Comentarios por chamado
-- [ ] Regras de transicao de status com permissao por perfil
-- [ ] Dashboard com metricas de tempo medio de resolucao
-- [ ] Testes automatizados para fluxo principal
-- [ ] Deploy (Render/Railway)
+- [x] Comentarios por chamado
+- [x] Regras de transicao de status com permissao por perfil
+- [x] Dashboard com metricas de tempo medio de resolucao
+- [x] Testes automatizados para fluxo principal
+- [x] Deploy (configuracao inicial)
+- [ ] Publicar projeto em plataforma (Render/Railway)
+- [ ] Adicionar imagens do sistema no README
 
 ## Decisoes tecnicas
 
