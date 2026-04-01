@@ -1,108 +1,123 @@
-# Help Desk - Sistema de Gestao de Chamados
+# Help Desk — Gestão de chamados de suporte
 
-Projeto de portfolio feito para praticar Django em um cenario mais proximo do dia a dia: abertura e acompanhamento de chamados.
+## Problema que este projeto resolve
 
-## Sobre o projeto
+Em um time de suporte ou TI interno, demandas chegam por e-mail, mensagem ou boca a boca e se perdem. Não há um lugar único para **abrir**, **acompanhar** e **resolver** chamados, nem visão de quantos estão abertos ou quanto tempo leva para fechar.
 
-A ideia aqui e simples: ter um sistema funcional, organizado e facil de evoluir.
-Neste primeiro momento, foquei em acertar o basico (autenticacao, CRUD de chamados e dashboard inicial) antes de partir para funcionalidades mais avancadas.
+Este sistema foi desenvolvido para **centralizar o atendimento**: o usuário abre um chamado, acompanha o status e troca mensagens no próprio ticket; quem atende (suporte) atualiza o fluxo e vê indicadores no painel. O foco é **gestão de demandas** e **controle do fluxo de atendimento**, não só um CRUD genérico.
+
+## O que o sistema faz (em poucas palavras)
+
+- Cadastro e login de usuários.
+- Abertura de chamados com título, descrição, prioridade e responsável.
+- Lista com filtro por status; detalhe com histórico de **comentários**.
+- **Transição de status** com regras (aberto → em andamento → resolvido) e **permissão** para quem é staff ou responsável pelo chamado.
+- **Dashboard** com totais por status, taxa de resolução e tempo médio até resolver.
+- Painel administrativo Django para gestão dos dados.
+- **Testes** cobrindo criação de chamado e regras de status.
 
 ## Stack
 
-- Python 3.13
-- Django 4.2
-- SQLite (desenvolvimento)
-- Templates Django + CSS simples
+| Camada | Tecnologia |
+|--------|------------|
+| Backend | Python 3.13, Django 4.2 |
+| Banco (dev) | SQLite |
+| Interface | Templates Django, CSS |
+| Servidor (produção) | Gunicorn, WhiteNoise |
 
-## Funcionalidades ja implementadas
+## Arquitetura
 
-- Cadastro, login e logout de usuarios
-- Criacao de chamados
-- Lista de chamados com filtro por status
-- Detalhe de chamado
-- Comentarios por chamado
-- Atualizacao de status com permissao por perfil
-- Dashboard com taxa e tempo medio de resolucao
-- Tela administrativa com `Ticket` registrado no admin
-- Testes automatizados para fluxo principal
-
-## Estrutura do projeto
+O backend foi organizado para **separar responsabilidades** e facilitar evolução:
 
 ```text
-core/      -> configuracoes globais e rotas principais
-tickets/   -> dominio de chamados (model, views, forms, urls)
-users/     -> cadastro de usuario
-templates/ -> telas HTML
-static/    -> estilos CSS
+core/          Configuração global (settings, URLs raiz), ponto de entrada WSGI
+tickets/       Domínio de chamados: models, views, forms, URLs, serviços de negócio
+users/         Cadastro de usuário (signup) integrado à autenticação do Django
+templates/     Telas HTML (lista, detalhe, formulários, dashboard)
+static/        Estilos e assets estáticos
 ```
+
+**Fluxo de dados:** requisição → view → (quando faz sentido) **camada de serviço** (`tickets/services.py`) para regras de status → model → template ou redirect.
+
+**Autenticação:** `django.contrib.auth` (sessão), rotas protegidas com `@login_required`.
+
+**Regras de negócio:** validação de transição de status e quem pode alterar ficam concentradas no serviço, em vez de espalhadas só nas views.
 
 ## Como rodar localmente
 
-1. Criar e ativar ambiente virtual:
+**Pré-requisitos:** Python 3.10+ (o projeto foi testado com 3.13).
+
+1. Clonar o repositório e entrar na pasta do projeto.
+
+2. Criar e ativar o ambiente virtual:
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-2. Instalar dependencias:
+3. Instalar dependências:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Executar migracoes:
+4. Aplicar migrações:
 
 ```bash
 python manage.py migrate
 ```
 
-4. Criar superusuario (opcional, recomendado):
+5. (Opcional) Criar superusuário para acessar `/admin/` e marcar usuários como *staff* (suporte):
 
 ```bash
 python manage.py createsuperuser
 ```
 
-5. Rodar servidor:
+6. Subir o servidor:
 
 ```bash
 python manage.py runserver
 ```
 
-## Rodar testes
+7. No navegador: `http://127.0.0.1:8000` — será pedido login; use `/accounts/signup/` para criar conta ou o admin para o superusuário.
+
+## Testes
 
 ```bash
 python manage.py test
 ```
 
+Cobre fluxo de criação de chamado, permissões de atualização de status e transições inválidas.
+
 ## Deploy (base)
 
-Este projeto ja possui configuracao inicial para deploy:
+Há preparação inicial para ambiente tipo PaaS:
 
-- `Procfile` para executar com Gunicorn
-- `whitenoise` para servir arquivos estaticos
-- variaveis de ambiente em `.env.example`
+- `Procfile` (Gunicorn)
+- WhiteNoise para arquivos estáticos
+- Variáveis documentadas em `.env.example`
 
-Em producao, configure pelo menos:
+Em produção, defina pelo menos: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DJANGO_ALLOWED_HOSTS` com o domínio real.
 
-- `DJANGO_SECRET_KEY`
-- `DJANGO_DEBUG=False`
-- `DJANGO_ALLOWED_HOSTS=seu-dominio.com`
+## Decisões técnicas (por quê assim)
 
-## Proximos passos
+- **Apps `tickets` e `users` separados:** isolar domínio de chamados do cadastro de usuário, alinhado a como projetos Django costumam crescer.
+- **SQLite no desenvolvimento:** simplicidade para rodar em qualquer máquina; em produção costuma-se PostgreSQL ou serviço gerenciado.
+- **Serviço para status:** concentrar regras de transição e permissão evita duplicar lógica e facilita testes.
+- **Templates + CSS simples:** prioridade em backend, regras e dados; interface limpa sem depender de framework front pesado.
+- **Testes no fluxo principal:** mostrar que o comportamento crítico do sistema está verificado automaticamente.
 
-- [x] Base do projeto Django com autenticacao
-- [x] CRUD inicial de chamados
-- [x] Comentarios por chamado
-- [x] Regras de transicao de status com permissao por perfil
-- [x] Dashboard com metricas de tempo medio de resolucao
-- [x] Testes automatizados para fluxo principal
-- [x] Deploy (configuracao inicial)
-- [ ] Publicar projeto em plataforma (Render/Railway)
-- [ ] Adicionar imagens do sistema no README
+## Roadmap opcional
 
-## Decisoes tecnicas
+- [ ] Publicar em plataforma (Render, Railway, etc.)
+- [ ] Incluir capturas de tela neste README
 
-- Usar apps separados (`tickets` e `users`) para facilitar evolucao.
-- Comecar com SQLite para foco em logica e entrega rapida.
-- Priorizar simplicidade nas telas para manter foco no backend.
+---
+
+## Próximo projeto (FastAPI) — planejamento
+
+API de **gestão de estoque e pedidos** (portfólio separado).
+
+**Semana 1:** base FastAPI + Docker; JWT; CRUD de produtos.  
+**Semana 2:** movimentações; pedidos com validação de estoque; testes e deploy.
