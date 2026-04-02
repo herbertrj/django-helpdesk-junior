@@ -108,6 +108,7 @@ Em produção, defina pelo menos: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DJ
 
 ## Roadmap
 
+- [ ] Evoluir arquitetura para suportar crescimento de usuários e volume de chamados
 - [ ] Publicar em produção no Render
 - [ ] Adicionar capturas de tela no README
 - [ ] Implementar notificações por e-mail para atualização de status
