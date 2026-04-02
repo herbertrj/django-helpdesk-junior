@@ -6,15 +6,13 @@ Em um time de suporte ou TI interno, demandas chegam por e-mail, mensagem ou boc
 
 Este sistema foi desenvolvido para **centralizar o atendimento**: o usuário abre um chamado, acompanha o status e troca mensagens no próprio ticket; quem atende (suporte) atualiza o fluxo e vê indicadores no painel. O foco é **gestão de demandas** e **controle do fluxo de atendimento**, não só um CRUD genérico.
 
-## O que o sistema faz (em poucas palavras)
+## Funcionalidades principais
 
-- Cadastro e login de usuários.
-- Abertura de chamados com título, descrição, prioridade e responsável.
-- Lista com filtro por status; detalhe com histórico de **comentários**.
-- **Transição de status** com regras (aberto → em andamento → resolvido) e **permissão** para quem é staff ou responsável pelo chamado.
-- **Dashboard** com totais por status, taxa de resolução e tempo médio até resolver.
-- Painel administrativo Django para gestão dos dados.
-- **Testes** cobrindo criação de chamado e regras de status.
+- Fluxo completo de atendimento: abertura, acompanhamento e resolução de chamados.
+- Controle de permissões por perfil: usuário comum e equipe de suporte (staff).
+- Histórico de interações por chamado com comentários e rastreabilidade.
+- Métricas de desempenho no dashboard: taxa de resolução e tempo médio de atendimento.
+- Gestão administrativa via painel Django para acompanhar dados e operação.
 
 ## Stack
 
@@ -107,3 +105,10 @@ Em produção, defina pelo menos: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DJ
 - **Serviço para status:** concentrar regras de transição e permissão evita duplicar lógica e facilita testes.
 - **Templates + CSS simples:** prioridade em backend, regras e dados; interface limpa sem depender de framework front pesado.
 - **Testes no fluxo principal:** mostrar que o comportamento crítico do sistema está verificado automaticamente.
+
+## Roadmap
+
+- [ ] Publicar em produção no Render
+- [ ] Adicionar capturas de tela no README
+- [ ] Implementar notificações por e-mail para atualização de status
+- [ ] Incluir filtro por período no dashboard
